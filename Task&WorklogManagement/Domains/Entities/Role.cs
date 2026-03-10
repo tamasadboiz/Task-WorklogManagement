@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task_WorklogManagement.Domain.Entities
+namespace Task_WorklogManagement.Domains.Entities
 {
     public class Role
     {
         public int RoleId { get; set; }
         public string RoleName { get; set; } = null!;
+
+        public ICollection<User> Users { get; set; } = [];
     }
 }

@@ -12,7 +12,7 @@ using Task_WorklogManagement.Infrastructure.Persistence;
 namespace Task_WorklogManagement.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(TaskWorklogDbContext))]
-    [Migration("20260205102238_InitialCreate")]
+    [Migration("20260206085443_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -55,10 +55,15 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uuid");
+
                     b.HasKey("RefreshTokenId");
 
                     b.HasIndex("Token")
                         .IsUnique();
+
+                    b.HasIndex("UserId1");
 
                     b.HasIndex("UserId", "ExpiresAt");
 
@@ -182,6 +187,9 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("role_id");
 
+                    b.Property<int?>("RoleId1")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
@@ -192,6 +200,8 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                         .IsUnique();
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("RoleId1");
 
                     b.ToTable("users", (string)null);
                 });
@@ -249,6 +259,12 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Task_WorklogManagement.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.TaskItem", b =>
@@ -267,6 +283,12 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Task_WorklogManagement.Domain.Entities.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId1");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.Worklog", b =>
@@ -282,6 +304,11 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

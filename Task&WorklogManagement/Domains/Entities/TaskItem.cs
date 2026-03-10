@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task_WorklogManagement.Domain.Entities
+namespace Task_WorklogManagement.Domains.Entities
 {
     public class TaskItem
     {
@@ -12,7 +12,7 @@ namespace Task_WorklogManagement.Domain.Entities
         public string Title { get; set; } = null!;
         public string? Description { get; set; }
         public Guid AssigneeId { get; set; }
-        public DateOnly Deadline { get; set; }
+        public DateTime Deadline { get; set; }
         public int Priority { get; set; }
         public int Status { get; set; }
         public DateTime CreatedAt { get; set; }
