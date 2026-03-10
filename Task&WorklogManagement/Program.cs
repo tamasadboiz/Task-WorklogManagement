@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Task_WorklogManagement.Application;
-using Task_WorklogManagement.Infrastructure;
-using Task_WorklogManagement.Infrastructure.Persistence;
+using Task_WorklogManagement.AutoMappers;
+using Task_WorklogManagement.Middlewares;
+using Task_WorklogManagement.Persistence;
 
 namespace Task_WorklogManagement
 {
@@ -16,6 +16,8 @@ namespace Task_WorklogManagement
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
 
             DefaultTypeMap.MatchNamesWithUnderscores = true;
 
@@ -26,28 +28,26 @@ namespace Task_WorklogManagement
 
             builder.Services.AddControllers();
 
-            builder.Services.AddApplication();
-            builder.Services.AddInfrastructure(builder.Configuration);
+            builder.Services.AddDependencyInjection(builder.Configuration);
 
             //JWT
-            var jwtSection = builder.Configuration.GetSection("Jwt");
-            var key = jwtSection["Key"] ?? throw new Exception("Missing Jwt: Key");
-
             builder.Services
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(opt =>
+                .AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", opt =>
                 {
+                    var config = builder.Configuration;
+                    var key = Encoding.UTF8.GetBytes(config["Jwt:Key"] ?? throw new Exception("Missing Jwt: Key"));
+
                     opt.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
-                        ValidateIssuerSigningKey = true,
                         ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
 
-                        ValidIssuer = jwtSection["Issuer"],
-                        ValidAudience = jwtSection["Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
-                        ClockSkew = TimeSpan.Zero
+                        ValidIssuer = config["Jwt:Issuer"],
+                        ValidAudience = config["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
                     };
                 });
 
@@ -98,8 +98,17 @@ namespace Task_WorklogManagement
 
             app.UseHttpsRedirection();
 
+            app.UseMiddleware<RequestLoggingMiddleware>();
+
+            app.UseMiddleware<ExceptionMiddleware>();
+
             app.UseAuthentication();
+
+            app.UseMiddleware<CurrentUserMiddleware>();
+
             app.UseAuthorization();
+
+            app.MapControllers();
 
             app.Run();
         }

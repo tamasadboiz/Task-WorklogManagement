@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Task_WorklogManagement.Infrastructure.Persistence;
+using Task_WorklogManagement.Persistence;
 
 #nullable disable
 
-namespace Task_WorklogManagement.Infrastructure.Data.Migrations
+namespace Task_WorklogManagement.Data.Migrations
 {
     [DbContext(typeof(TaskWorklogDbContext))]
-    partial class TaskWorklogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260303043305_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.RefreshToken", b =>
+            modelBuilder.Entity("Task_WorklogManagement.Domains.Entities.RefreshToken", b =>
                 {
                     b.Property<Guid>("RefreshTokenId")
                         .ValueGeneratedOnAdd()
@@ -52,22 +55,17 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.Property<Guid?>("UserId1")
-                        .HasColumnType("uuid");
-
                     b.HasKey("RefreshTokenId");
 
                     b.HasIndex("Token")
                         .IsUnique();
-
-                    b.HasIndex("UserId1");
 
                     b.HasIndex("UserId", "ExpiresAt");
 
                     b.ToTable("refresh_tokens", (string)null);
                 });
 
-            modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.Role", b =>
+            modelBuilder.Entity("Task_WorklogManagement.Domains.Entities.Role", b =>
                 {
                     b.Property<int>("RoleId")
                         .ValueGeneratedOnAdd()
@@ -106,7 +104,7 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.TaskItem", b =>
+            modelBuilder.Entity("Task_WorklogManagement.Domains.Entities.TaskItem", b =>
                 {
                     b.Property<Guid>("TaskItemId")
                         .ValueGeneratedOnAdd()
@@ -123,7 +121,7 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<DateOnly>("Deadline")
+                    b.Property<DateTime>("Deadline")
                         .HasColumnType("date")
                         .HasColumnName("deadline");
 
@@ -157,7 +155,7 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                     b.ToTable("task_items", (string)null);
                 });
 
-            modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.User", b =>
+            modelBuilder.Entity("Task_WorklogManagement.Domains.Entities.User", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
@@ -184,9 +182,6 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("role_id");
 
-                    b.Property<int?>("RoleId1")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
@@ -198,12 +193,10 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.HasIndex("RoleId1");
-
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.Worklog", b =>
+            modelBuilder.Entity("Task_WorklogManagement.Domains.Entities.Worklog", b =>
                 {
                     b.Property<Guid>("WorklogId")
                         .ValueGeneratedOnAdd()
@@ -232,7 +225,7 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.Property<DateOnly>("WorkDate")
+                    b.Property<DateTime>("WorkDate")
                         .HasColumnType("date")
                         .HasColumnName("work_date");
 
@@ -243,69 +236,66 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                     b.HasIndex("TaskItemId", "UserId", "WorkDate")
                         .IsUnique();
 
-                    b.ToTable("worklos", null, t =>
+                    b.ToTable("worklog", null, t =>
                         {
                             t.HasCheckConstraint("ck_worklogs_hoursspent", "hours_spent > 0 AND  hours_spent <= 8");
                         });
                 });
 
-            modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.RefreshToken", b =>
+            modelBuilder.Entity("Task_WorklogManagement.Domains.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("Task_WorklogManagement.Domain.Entities.User", null)
-                        .WithMany()
+                    b.HasOne("Task_WorklogManagement.Domains.Entities.User", "User")
+                        .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Task_WorklogManagement.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1");
-
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.TaskItem", b =>
+            modelBuilder.Entity("Task_WorklogManagement.Domains.Entities.TaskItem", b =>
                 {
-                    b.HasOne("Task_WorklogManagement.Domain.Entities.User", null)
+                    b.HasOne("Task_WorklogManagement.Domains.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("AssigneeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.User", b =>
+            modelBuilder.Entity("Task_WorklogManagement.Domains.Entities.User", b =>
                 {
-                    b.HasOne("Task_WorklogManagement.Domain.Entities.Role", null)
-                        .WithMany()
+                    b.HasOne("Task_WorklogManagement.Domains.Entities.Role", "Role")
+                        .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Task_WorklogManagement.Domain.Entities.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId1");
-
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.Worklog", b =>
+            modelBuilder.Entity("Task_WorklogManagement.Domains.Entities.Worklog", b =>
                 {
-                    b.HasOne("Task_WorklogManagement.Domain.Entities.TaskItem", null)
+                    b.HasOne("Task_WorklogManagement.Domains.Entities.TaskItem", null)
                         .WithMany()
                         .HasForeignKey("TaskItemId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Task_WorklogManagement.Domain.Entities.User", null)
+                    b.HasOne("Task_WorklogManagement.Domains.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Task_WorklogManagement.Domain.Entities.Role", b =>
+            modelBuilder.Entity("Task_WorklogManagement.Domains.Entities.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Task_WorklogManagement.Domains.Entities.User", b =>
+                {
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

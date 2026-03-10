@@ -6,20 +6,27 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Task_WorklogManagement.Application.Interfaces.Security;
-using Task_WorklogManagement.Infrastructure.Persistence;
-using Task_WorklogManagement.Infrastructure.Persistence.Repository;
-using Task_WorklogManagement.Infrastructure.Security;
+using Task_WorklogManagement.Interfaces;
+using Task_WorklogManagement.Interfaces.Security;
+using Task_WorklogManagement.Persistence;
+using Task_WorklogManagement.Repositories;
+using Task_WorklogManagement.Security;
+using Task_WorklogManagement.Services;
 
-namespace Task_WorklogManagement.Infrastructure
+namespace Task_WorklogManagement
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddDependencyInjection(this IServiceCollection services, IConfiguration config)
         {
             services.AddScoped<UserRepository>();
             services.AddScoped<RefreshTokenRepository>();
+            services.AddScoped<TaskItemRepository>();
+
             services.AddScoped<IJwtTokenService, JwtTokenService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITaskItemService, TaskItemService>();
 
             services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
             services.AddScoped<IDbConnectionFactory, NpgsqlConnectionFactory>();

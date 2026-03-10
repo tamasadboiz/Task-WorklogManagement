@@ -22,15 +22,12 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.0" />
     <PackageReference Include="Npgsql" Version="10.0.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Task&amp;WorklogManagement.Application\Task&amp;WorklogManagement.Application.csproj" />
     <ProjectReference Include="..\Task&amp;WorklogManagement.Domain\Task&amp;WorklogManagement.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="database\" />
   </ItemGroup>
 
 </Project>

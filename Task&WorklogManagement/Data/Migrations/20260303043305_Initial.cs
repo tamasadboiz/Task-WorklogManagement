@@ -6,10 +6,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Task_WorklogManagement.Infrastructure.Data.Migrations
+namespace Task_WorklogManagement.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -79,7 +79,7 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                     title = table.Column<string>(type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: true),
                     assignee_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    deadline = table.Column<DateOnly>(type: "date", nullable: false),
+                    deadline = table.Column<DateTime>(type: "date", nullable: false),
                     priority = table.Column<int>(type: "integer", nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
@@ -97,29 +97,29 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "worklos",
+                name: "worklog",
                 columns: table => new
                 {
                     worklog_id = table.Column<Guid>(type: "uuid", nullable: false),
                     task_item_id = table.Column<Guid>(type: "uuid", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    work_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    work_date = table.Column<DateTime>(type: "date", nullable: false),
                     hours_spent = table.Column<decimal>(type: "numeric", nullable: false),
                     note = table.Column<string>(type: "text", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_worklos", x => x.worklog_id);
+                    table.PrimaryKey("PK_worklog", x => x.worklog_id);
                     table.CheckConstraint("ck_worklogs_hoursspent", "hours_spent > 0 AND  hours_spent <= 8");
                     table.ForeignKey(
-                        name: "FK_worklos_task_items_task_item_id",
+                        name: "FK_worklog_task_items_task_item_id",
                         column: x => x.task_item_id,
                         principalTable: "task_items",
                         principalColumn: "task_item_id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_worklos_users_user_id",
+                        name: "FK_worklog_users_user_id",
                         column: x => x.user_id,
                         principalTable: "users",
                         principalColumn: "user_id",
@@ -175,14 +175,14 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                 column: "role_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_worklos_task_item_id_user_id_work_date",
-                table: "worklos",
+                name: "IX_worklog_task_item_id_user_id_work_date",
+                table: "worklog",
                 columns: new[] { "task_item_id", "user_id", "work_date" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_worklos_user_id",
-                table: "worklos",
+                name: "IX_worklog_user_id",
+                table: "worklog",
                 column: "user_id");
         }
 
@@ -193,7 +193,7 @@ namespace Task_WorklogManagement.Infrastructure.Data.Migrations
                 name: "refresh_tokens");
 
             migrationBuilder.DropTable(
-                name: "worklos");
+                name: "worklog");
 
             migrationBuilder.DropTable(
                 name: "task_items");

@@ -1,15 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36811.4 d17.14
+VisualStudioVersion = 17.14.36811.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task&WorklogManagement.Api", "Task&WorklogManagement\Task&WorklogManagement.Api.csproj", "{78468469-152A-417C-BB17-938D2ECCCAC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task&WorklogManagement.Domain", "Task&WorklogManagement.Domain\Task&WorklogManagement.Domain.csproj", "{DF0CA6FD-E900-42F6-86C6-E1CC26B5DDBB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task&WorklogManagement.Application", "Task&WorklogManagement.Application\Task&WorklogManagement.Application.csproj", "{1122FB1A-2D69-4DE7-80FE-939B7B820608}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task&WorklogManagement.Infrastructure", "Task&WorklogManagement.Infrastructure\Task&WorklogManagement.Infrastructure.csproj", "{8A6B0E83-E779-4E0F-88CD-4A24AD6EF59D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +20,6 @@ Global
 		{78468469-152A-417C-BB17-938D2ECCCAC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78468469-152A-417C-BB17-938D2ECCCAC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78468469-152A-417C-BB17-938D2ECCCAC4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF0CA6FD-E900-42F6-86C6-E1CC26B5DDBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF0CA6FD-E900-42F6-86C6-E1CC26B5DDBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF0CA6FD-E900-42F6-86C6-E1CC26B5DDBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF0CA6FD-E900-42F6-86C6-E1CC26B5DDBB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1122FB1A-2D69-4DE7-80FE-939B7B820608}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1122FB1A-2D69-4DE7-80FE-939B7B820608}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1122FB1A-2D69-4DE7-80FE-939B7B820608}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1122FB1A-2D69-4DE7-80FE-939B7B820608}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8A6B0E83-E779-4E0F-88CD-4A24AD6EF59D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A6B0E83-E779-4E0F-88CD-4A24AD6EF59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A6B0E83-E779-4E0F-88CD-4A24AD6EF59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A6B0E83-E779-4E0F-88CD-4A24AD6EF59D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
